@@ -1,7 +1,147 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include <cmath>
-
 using namespace std;
+
+
+vector<char>v;
+vector<int>fre;
+void fileread()
+{
+    FILE *in, *out;
+    char ch;
+ 
+    int word = 0;
+    int spc = 0;
+ 
+    in = fopen("input.txt", "r");
+    if (in == NULL)
+    {
+        printf("Cannot open source file.\n");
+        exit(1);
+    }
+    out = fopen("output.txt", "w");
+    if (out == NULL)
+    {
+        printf("Cannot open destination file.\n");
+        exit(1);
+    }
+    
+    int freq[128] = {};        // stores frequency of characters
+    int words[128] = {};    // stores number of words having each character
+ 
+    int seen[128] = {};
+
+    do {
+        // read each character from the input file
+        ch = getc(in);
+ 
+        // increase the frequency of the corresponding character
+        freq[ch]++;
+ 
+        // if the character is seen for the first time in the current word
+        if (!seen[ch]) {
+            words[ch]++;
+        }
+ 
+        // mark character as seen (in current word)
+        seen[ch] = 1;
+ 
+        // if we have encountered any whitespace character
+        if (ch == ' ' || ch == '\n' || ch == '\t')
+        {
+            // reset flag
+            for (int i = 0; i < 93; i++) {
+                seen[i] = 0;
+            }
+ 
+            // increase word frequency
+            word++;
+        }
+    }
+  
+    while (!feof(in));
+    
+    // print histogram data in the output file
+    fputs("character    frequency    word frequency", out);
+ 
+    for (int i = 65; i <= 90; i++)
+    {
+        if (freq[i] != 0) {
+            v.push_back('A'+i-65);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d\t\t\t\t%2d", i, freq[i], words[i]);
+        }
+    }
+ 
+    for (int i = 97; i <= 122; i++)
+    {
+        if (freq[i] != 0) {
+            v.push_back('a'+i-97);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d\t\t\t\t%2d", i, freq[i], words[i]);
+        }
+    }
+ 
+    for (int i = 48; i <= 57; i++)
+    {
+        if (freq[i] != 0) {
+            v.push_back('0'+i-48);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d\t\t\t\t%2d", i, freq[i], words[i]);
+        }
+    }
+ 
+    fputs("\n\nSpecial characters -\n", out);
+ 
+    for (int i = 32; i <= 47; i++)
+    {
+        spc += freq[i];
+        if (freq[i] != 0) {
+            v.push_back(' '+i-32);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d", i, freq[i]);
+        }
+    }
+ 
+    for (int i = 58; i <= 64; i++)
+    {
+        spc += freq[i];
+        if (freq[i] != 0) {
+            v.push_back(':'+i-58);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d", i, freq[i]);
+        }
+    }
+ 
+    for (int i = 91; i <= 96; i++)
+    {
+        spc += freq[i];
+        if (freq[i] != 0) {
+            v.push_back('['+i-91);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d", i, freq[i]);
+        }
+    }
+ 
+    for (int i = 123; i <= 126; i++)
+    {
+        spc += freq[i];
+        if (freq[i] != 0) {
+            v.push_back('{'+i-123);
+            fre.push_back(freq[i]);
+            fprintf(out, "\n%c\t\t\t\t%2d", i, freq[i]);
+        }
+    }
+
+    fprintf(out, "\n\nThe total number of special characters are %d ", spc);
+    fprintf(out, "\n\nThe total number of words is %d ", word);
+ 
+    fclose(out);
+    fclose(in);
+ 
+}
+
+
 
 struct node
 {
@@ -100,7 +240,7 @@ HuffmanCode::HuffmanCode()
 	cin.get();// Codes are assigned to the symbols
 	cout<<"Enter the string to be encoded by Huffman Coding: ";
 	char *str;
-	str=new char[50];
+	str=new char[100000];
 	cin>>str;
 	HuffmanTree.encode(str);
 	cin.get();
@@ -118,7 +258,7 @@ HuffmanCode::HuffmanCode()
 minHeap::minHeap()
 {
 	cout<<"Enter no. of symbols:";
-  cin>>n;
+    n=v.size();
 	T= new BinaryTree [n+1];
 	T[0].root=new node;
 	T[0].root->freq=n; //Number of elements in min. Heap is stored in the zeroth element of the heap
@@ -126,9 +266,9 @@ minHeap::minHeap()
   {
       T[i].root=new node;
 			cout<<"Enter characters of string :- ";
-      cin>>T[i].root->info;
+      T[i].root->info=v[i];
       cout<<"and their frequency of occurence in the string:- ";
-      cin>>T[i].root->freq;
+      T[i].root->freq=fre[i];
       T[i].root->code=NULL;
       T[i].root->Llink=NULL;
 			T[i].root->Rlink=NULL;
@@ -410,7 +550,8 @@ void minHeap::print()
 
 int main()
 {
-    HuffmanCode c;
+	fileread();
+	HuffmanCode c;
     cin.get();
     return 0;
 }

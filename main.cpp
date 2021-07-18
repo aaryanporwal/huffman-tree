@@ -6,15 +6,11 @@
 using namespace std;
 
 map<char,int>frequency;
-vector<char>v;
-vector<int>fre;
+
 void fileread()
 {
     FILE *in, *out;
     char ch;
-
-    int word = 0;
-    int spc = 0;
 
     in = fopen("input.txt", "r");
     if (in == NULL)
@@ -149,7 +145,6 @@ HuffmanCode::HuffmanCode()
 
 minHeap::minHeap()
 {
-	cout<<"Enter no. of symbols:";
     n=frequency.size();
 	T= new BinaryTree [n+1];
 	T[0].root=new node;
@@ -158,17 +153,13 @@ minHeap::minHeap()
 	for(auto u: frequency)
   {
       T[b].root=new node;
-        cout<<"Enter characters of string :- ";
-        cout<<u.first<<"\n";
       T[b].root->info=u.first;
-      cout<<"and their frequency of occurence in the string:- ";
       T[b].root->freq=u.second;
-      cout<<u.second<<"\n";
       T[b].root->code=NULL;
       T[b].root->Llink=NULL;
       T[b].root->Rlink=NULL;
         b++;
-			// Initially, all the nodes are leaf nodes and stored as an array of trees.
+    // Initially, all the nodes are leaf nodes and stored as an array of trees.
   }
   cout<<endl;
 	int i=(int)(n / 2);// Heapification will be started from the PARENT element of
@@ -451,3 +442,4 @@ int main()
 
     return 0;
 }
+

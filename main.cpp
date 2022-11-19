@@ -10,7 +10,7 @@
 
 using namespace std;
 
-map < char, int > frequency;
+map <char, int> frequency;
 
 void fileread() {
   FILE * in , * out;
